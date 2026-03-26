@@ -8,6 +8,7 @@ function App() {
     quantity: "",
   });
   const [catalog, setCatalog] = useState([]);
+  const [editId, setEditId] = useState(null);
 
   const handleChange = (e) => {
     setFormData({
@@ -18,9 +19,34 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:3000/api", formData).then((res) => {
-      setCatalog(res.data);
+
+    if (editId === null) {
+      axios.post("http://localhost:3000/api", formData).then((res) => {
+        setCatalog(res.data);
+      });
+    } else {
+      axios
+        .patch(`http://localhost:3000/api/${editId}`, formData)
+        .then((res) => {
+          setCatalog(res.data);
+        });
+    }
+  };
+
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:3000/api/${id}`)
+      .then((res) => setCatalog(res.data));
+  };
+
+  const handleEdit = (id) => {
+    const index = catalog.findIndex((product) => product.id === id);
+    setFormData({
+      productName: catalog[index].productName,
+      price: catalog[index].price,
+      quantity: catalog[index].quantity,
     });
+    setEditId(id);
   };
 
   return (
@@ -53,9 +79,11 @@ function App() {
       <ul>
         {catalog.map((product, index) => (
           <div key={index}>
-            <li> {product.productName}</li>
-            <li> {product.price}</li>
-            <li> {product.quantity}</li>
+            <li>
+              {product.productName} {product.price} {product.quantity}
+            </li>
+            <button onClick={() => handleDelete(product.id)}>delete</button>{" "}
+            <buttonon onClick={() => handleEdit(product.id)}>edit</buttonon>
           </div>
         ))}
       </ul>
