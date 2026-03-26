@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 function App() {
   const [formData, setFormData] = useState({
-    productName: "",
+    item: "",
     price: "",
     quantity: "",
   });
@@ -23,6 +23,11 @@ function App() {
     if (editId === null) {
       axios.post("http://localhost:3000/api", formData).then((res) => {
         setCatalog(res.data);
+        setFormData({
+          item: "",
+          price: "",
+          quantity: "",
+        });
       });
     } else {
       axios
@@ -30,6 +35,12 @@ function App() {
         .then((res) => {
           setCatalog(res.data);
         });
+      setEditId(null);
+      setFormData({
+        item: "",
+        price: "",
+        quantity: "",
+      });
     }
   };
 
@@ -40,9 +51,9 @@ function App() {
   };
 
   const handleEdit = (id) => {
-    const index = catalog.findIndex((product) => product.id === id);
+    const index = catalog.findIndex((item) => item.id === id);
     setFormData({
-      productName: catalog[index].productName,
+      item: catalog[index].item,
       price: catalog[index].price,
       quantity: catalog[index].quantity,
     });
@@ -54,8 +65,8 @@ function App() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="productName"
-          value={formData.productName}
+          name="item"
+          value={formData.item}
           onChange={handleChange}
           placeholder="Product Name"
         />
@@ -80,10 +91,10 @@ function App() {
         {catalog.map((product, index) => (
           <div key={index}>
             <li>
-              {product.productName} {product.price} {product.quantity}
+              {product.item} {product.price} {product.quantity}
             </li>
             <button onClick={() => handleDelete(product.id)}>delete</button>{" "}
-            <buttonon onClick={() => handleEdit(product.id)}>edit</buttonon>
+            <button onClick={() => handleEdit(product.id)}>edit</button>
           </div>
         ))}
       </ul>
