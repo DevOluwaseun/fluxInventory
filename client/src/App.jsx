@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 function App() {
   const [formData, setFormData] = useState({
-    item: "",
-    price: "",
+    name: "",
     quantity: "",
+    sku: "",
+    category: "",
+    unit_price: "",
+    unit: "",
+    reorder_point: "",
+    description: "",
   });
+
   const [catalog, setCatalog] = useState([]);
   const [editId, setEditId] = useState(null);
 
@@ -17,29 +23,47 @@ function App() {
     });
   };
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const getItems = async () => {
+      const { data } = await axios.get("http://localhost:3000/api");
+      setCatalog(data);
+    };
+    getItems();
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (editId === null) {
-      axios.post("http://localhost:3000/api", formData).then((res) => {
-        setCatalog(res.data);
-        setFormData({
-          item: "",
-          price: "",
-          quantity: "",
-        });
+      const { data } = await axios.post("http://localhost:3000/api", formData);
+      setCatalog(data);
+      setFormData({
+        name: "",
+        quantity: "",
+        sku: "",
+        category: "",
+        unit_price: "",
+        unit: "",
+        reorder_point: "",
+        description: "",
       });
     } else {
-      axios
-        .patch(`http://localhost:3000/api/${editId}`, formData)
-        .then((res) => {
-          setCatalog(res.data);
-        });
+      const { data } = await axios.patch(
+        `http://localhost:3000/api/${editId}`,
+        formData,
+      );
+
+      setCatalog(data);
       setEditId(null);
       setFormData({
-        item: "",
-        price: "",
+        name: "",
         quantity: "",
+        sku: "",
+        category: "",
+        unit_price: "",
+        unit: "",
+        reorder_point: "",
+        description: "",
       });
     }
   };
@@ -53,9 +77,14 @@ function App() {
   const handleEdit = (id) => {
     const index = catalog.findIndex((item) => item.id === id);
     setFormData({
-      item: catalog[index].item,
-      price: catalog[index].price,
+      name: catalog[index].name,
       quantity: catalog[index].quantity,
+      sku: catalog[index].sku,
+      category: catalog[index].category,
+      unit_price: catalog[index].unit_price,
+      unit: catalog[index].unit,
+      reorder_point: catalog[index].reorder_point,
+      description: catalog[index].description,
     });
     setEditId(id);
   };
@@ -65,18 +94,12 @@ function App() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="item"
-          value={formData.item}
+          name="name"
+          value={formData.name}
           onChange={handleChange}
-          placeholder="Product Name"
+          placeholder="Item name"
         />
-        <input
-          type="text"
-          name="price"
-          value={formData.price}
-          onChange={handleChange}
-          placeholder="Price"
-        />
+
         <input
           type="text"
           name="quantity"
@@ -84,17 +107,66 @@ function App() {
           onChange={handleChange}
           placeholder="quantity"
         />
+
+        <input
+          type="text"
+          name="sku"
+          value={formData.sku}
+          onChange={handleChange}
+          placeholder="sku"
+        />
+        <input
+          type="text"
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          placeholder="category"
+        />
+        <input
+          type="text"
+          name="unit_price"
+          value={formData.unit_price}
+          onChange={handleChange}
+          placeholder="unit_price"
+        />
+
+        <input
+          type="text"
+          name="unit"
+          value={formData.unit}
+          onChange={handleChange}
+          placeholder="unit"
+        />
+
+        <input
+          type="text"
+          name="reorder_point"
+          value={formData.reorder_point}
+          onChange={handleChange}
+          placeholder="Reorder Point"
+        />
+
+        <input
+          type="text"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Description"
+        />
+
         <button>Submit</button>
       </form>
 
       <ul>
-        {catalog.map((product, index) => (
+        {catalog.map((items, index) => (
           <div key={index}>
             <li>
-              {product.item} {product.price} {product.quantity}
+              {items.name} {items.quantity} {items.sku} {items.category}{" "}
+              {items.unit_price} {items.unit} {items.reorder_point}{" "}
+              {items.description}
             </li>
-            <button onClick={() => handleDelete(product.id)}>delete</button>{" "}
-            <button onClick={() => handleEdit(product.id)}>edit</button>
+            <button onClick={() => handleDelete(items.id)}>delete</button>{" "}
+            <button onClick={() => handleEdit(items.id)}>edit</button>
           </div>
         ))}
       </ul>

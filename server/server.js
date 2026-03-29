@@ -1,14 +1,15 @@
-const express = require("express");
-const itemRoute = require("./routes/item.route");
-const morgan = require("morgan");
-const cors = require("cors");
+import express from "express";
+import itemRoute from "./routes/item.route.js";
+import morgan from "morgan";
+import cors from "cors";
+
 const app = express();
 const port = 3000;
 
 app.use(morgan("dev"));
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5174" }));
+app.use(cors({ origin: "http://localhost:5173" }));
 
 app.get("/", (req, res) => {
   res.send("Hello, World");
