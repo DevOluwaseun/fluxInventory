@@ -5,31 +5,33 @@
   --color-background: hsl(220, 30%, 98%);
   --color-surface-container-low: hsl(214, 20%, 94%);
   --color-surface-container-lowest: hsl(0, 0%, 100%);
-  --color-surface-container-high: hsl(205 26.1% 91%);
+  --color-surface-container-high: hsl(205 26% 91%);
 
   /*color- Primary */
   --color-primary: hsl(221 83.8% 46.1%);
   --color-primary-dim: hsl(218 100% 38.6%);
-  --color-primary-container: hsl(230 100% 92.9%);
+  --color-primary-container: hsl(230 100% 93%);
 
   /*color- On Colors */
   --color-on-surface: hsl(198 13.1% 19.4%);
-  --color-on-surface-variant: hsl(203 6.9% 37.1%);
+  --color-on-surface-variant: hsl(220, 9%, 65%);
 
   /*color- Error */
   --color-error: hsl(2 44.5% 43.1%);
   --color-error-container: hsl(3 98.4% 75.5%);
 
   /*color- Outline */
-  --color-outline: hsl(201 5.7% 47.8%);
-  --color-outline-variant: hsl(206 9.1% 69.8%);
+  --color-outline: hsl(201 6% 47.8%);
+  --color-outline-variant: hsl(206 13% 72%);
 
   /*color- Inverse */
   --color-inverse-surface: hsl(195 14.3% 5.5%);
 
   /*color- Tertiary (for warning badges) */
-  --color-tertiary-container: hsl(45, 90%, 88%);
-  --color-on-tertiary-container: hsl(45, 60%, 25%);
+  /* --color-tertiary-container: hsl(45, 90%, 88%);
+  --color-on-tertiary-container: hsl(45, 60%, 25%); */
+  --color-tertiary-container: oklch(89.4% 0.057 293.283);
+  --color-on-tertiary-container: oklch(43.2% 0.232 292.759);
 
   /* Typography */
   --font-display: "Manrope", sans-serif;
@@ -62,6 +64,7 @@
 
 body {
   background-color: var(--color-background);
+  font: var(--font-body);
 }
 
 ::placeholder {

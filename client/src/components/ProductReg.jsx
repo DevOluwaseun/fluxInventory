@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar.jsx";
 import axios from "axios";
 import { InfoIcon, CameraPlusIcon } from "@phosphor-icons/react";
+import { useLocation, useNavigate } from "react-router";
 
 function ProductReg() {
   const [formData, setFormData] = useState({
@@ -17,6 +18,11 @@ function ProductReg() {
 
   const [catalog, setCatalog] = useState([]);
   const [editId, setEditId] = useState(null);
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  console.log(location.state);
+  const product = location.state?.product;
 
   const handleChange = (e) => {
     setFormData({
@@ -41,6 +47,7 @@ function ProductReg() {
         reorder_point: "",
         description: "",
       });
+      navigate("/inventory");
     } else {
       const { data } = await axios.patch(
         `http://localhost:3000/api/${editId}`,
@@ -60,28 +67,36 @@ function ProductReg() {
         description: "",
       });
     }
+    navigate("/inventory");
   };
 
-  const handleEdit = (id) => {
-    const index = catalog.findIndex((item) => item.id === id);
+  const edit = () => {
     setFormData({
-      name: catalog[index].name,
-      quantity: catalog[index].quantity,
-      sku: catalog[index].sku,
-      category: catalog[index].category,
-      unit_price: catalog[index].unit_price,
-      unit: catalog[index].unit,
-      reorder_point: catalog[index].reorder_point,
-      description: catalog[index].description,
+      name: product.name,
+      quantity: product.quantity,
+      sku: product.sku,
+      category: product.category,
+      unit_price: product.unit_price,
+      unit: product.unit,
+      reorder_point: product.reorder_point,
+      description: product.description,
     });
-    setEditId(id);
+    console.log(location.state);
+    setEditId(product.id);
   };
+
+  useEffect(() => {
+    if (product) {
+      edit();
+      console.log(location.state);
+    }
+  }, []);
 
   return (
     <div className="flex">
       <Sidebar />
 
-      <div className="p-space-6 flex flex-col gap-space-1">
+      <div className="p-space-6 gap-space-1 flex flex-col">
         <h1 className="text-md font-body text-on-surface">
           Inventory Management
         </h1>
@@ -89,33 +104,33 @@ function ProductReg() {
         <div className="flex">
           <div>
             <form
-              className="flex flex-wrap  gap-space-6"
+              className="gap-space-6 flex flex-wrap"
               onSubmit={handleSubmit}
             >
-              <div className="flex gap-space-6">
+              <div className="gap-space-6 flex">
                 <div>
                   <div>
                     <h1 className="font-display text-on-surface mt-space-12 mb-space-2 text-4xl font-bold">
-                      Product Registry
+                      Product Details
                     </h1>
-                    <p className="text-body  text-on-surface-variant">
+                    <p className="text-body text-on-surface-variant">
                       Define your asset parameters with precision. All fields
                       marked with an asterisk are required for ledger integrity.
                     </p>
                   </div>
-                  <div className="bg-surface-container-lowest text-body font-body flex flex-col flex-1 mt-space-8  p-space-8 rounded-lg  shadow-float">
-                    <h1 className="flex items-center gap-space-2 mb-space-6 text-primary">
+                  <div className="bg-surface-container-lowest text-body font-body mt-space-8 p-space-8 shadow-float flex flex-1 flex-col rounded-lg">
+                    <h1 className="gap-space-2 mb-space-6 text-primary flex items-center">
                       <InfoIcon size={25} weight="fill" />
-                      <span className="text-md font-display font-bold text-on-surface">
+                      <span className="text-md font-display text-on-surface font-bold">
                         General Information
                       </span>
                     </h1>
 
-                    <div className="flex gap-space-6 text-on-surface-variant flex-col">
-                      <div className="flex flex-col gap-space-1">
+                    <div className="gap-space-6 font-body text-on-surface flex flex-col">
+                      <div className="gap-space-1 flex flex-col">
                         <label
                           htmlFor="name"
-                          className="text-xs text-on-surface-variant"
+                          className="text-on-surface-variant text-xs"
                         >
                           ITEM NAME *
                         </label>
@@ -124,16 +139,16 @@ function ProductReg() {
                           name="name"
                           value={formData.name}
                           onChange={handleChange}
-                          className="peer w-full bg-surface-container-low rounded-xs py-space-2 px-space-4   border border-transparent focus:outline-none  focus:border-primary focus:bg-surface-container-lowest transition-all duration-200 "
+                          className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                           placeholder="e.g Ergonomic Executive Chair"
                         />
                       </div>
 
-                      <div className="flex w-full flex-col md:flex-row gap-space-6">
-                        <div className="flex flex-col flex-1  gap-space-1">
+                      <div className="gap-space-6 flex w-full flex-col md:flex-row">
+                        <div className="gap-space-1 flex flex-1 flex-col">
                           <label
                             htmlFor="sku"
-                            className="text-xs text-on-surface-variant"
+                            className="text-on-surface-variant text-xs"
                           >
                             SKU / IDENTIFIER *
                           </label>
@@ -143,14 +158,14 @@ function ProductReg() {
                             name="sku"
                             value={formData.sku}
                             onChange={handleChange}
-                            className="peer w-full bg-surface-container-low rounded-xs py-space-2 px-space-4 border border-transparent focus:outline-none  focus:border-primary focus:bg-surface-container-lowesttransition-all duration-200 "
+                            className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                             placeholder="sku"
                           />
                         </div>
-                        <div className="flex w-full flex-1 flex-col gap-space-1">
+                        <div className="gap-space-1 flex w-full flex-1 flex-col">
                           <label
                             htmlFor="category"
-                            className="text-xs text-on-surface-variant "
+                            className="text-on-surface-variant text-xs"
                           >
                             CATEGORY
                           </label>
@@ -160,15 +175,15 @@ function ProductReg() {
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
-                            className="peer w-full bg-surface-container-low rounded-xs py-space-2 px-space-4 border border-transparent focus:outline-none  focus:border-primary focus:bg-surface-container-lowest transition-all duration-200 "
+                            className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                             placeholder="category"
                           />
                         </div>
                       </div>
-                      <div className="flex flex-col gap-space-1">
+                      <div className="gap-space-1 flex flex-col">
                         <label
                           htmlFor="description"
-                          className="text-xs text-on-surface-variant"
+                          className="text-on-surface-variant text-xs"
                         >
                           DESCRIPTION
                         </label>
@@ -178,25 +193,25 @@ function ProductReg() {
                           name="description"
                           value={formData.description}
                           onChange={handleChange}
-                          className="peer w-full field-sizing-fixed h-40 bg-surface-container-low rounded-xs py-space-2 px-space-4 border border-transparent focus:outline-none  focus:border-primary focus:bg-surface-container-lowesttransition-all duration-200 "
+                          className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary field-sizing-fixed h-40 w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                           placeholder="Provide detailed specifications, materials, or usage instructions..."
                         ></textarea>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-surface-container-lowest w-full flex flex-col mt-6 gap-space-6 p-space-8 rounded-lg  shadow-float">
-                    <h1 className="flex items-center gap-space-2  text-primary">
+                  <div className="bg-surface-container-lowest gap-space-6 p-space-8 shadow-float mt-6 flex w-full flex-col rounded-lg">
+                    <h1 className="gap-space-2 text-primary flex items-center">
                       <InfoIcon size={25} weight="fill" />
-                      <span className="text-md font-display font-bold text-on-surface">
+                      <span className="text-md font-display text-on-surface font-bold">
                         Financials & Inventory
                       </span>
                     </h1>
 
-                    <div className="flex gap-space-6  items-end md:flex-row flex-col ">
-                      <div className="flex flex-col gap-space-1">
+                    <div className="gap-space-6 font-body flex flex-col items-end md:flex-row">
+                      <div className="gap-space-1 flex flex-col">
                         <label
                           htmlFor="unit_price"
-                          className="text-xs text-on-surface-variant"
+                          className="text-on-surface-variant text-xs"
                         >
                           UNIT PRICE (£)
                         </label>
@@ -206,15 +221,15 @@ function ProductReg() {
                           name="unit_price"
                           value={formData.unit_price}
                           onChange={handleChange}
-                          className="peer w-full bg-surface-container-low rounded-xs py-space-2 px-space-4   border border-transparent focus:outline-none  focus:border-primary focus:bg-surface-container-lowest transition-all duration-200 "
+                          className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                           placeholder="£ 0.00"
                         />
                       </div>
 
-                      <div className="flex flex-col gap-space-1">
+                      <div className="gap-space-1 flex flex-col">
                         <label
                           htmlFor="quantity"
-                          className="text-xs text-on-surface-variant"
+                          className="text-on-surface-variant text-xs"
                         >
                           QUANTITY
                         </label>
@@ -224,15 +239,15 @@ function ProductReg() {
                           name="quantity"
                           value={formData.quantity}
                           onChange={handleChange}
-                          className="peer w-full bg-surface-container-low rounded-xs py-space-2 px-space-4   border border-transparent focus:outline-none  focus:border-primary focus:bg-surface-container-lowest transition-all duration-200 "
+                          className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                           placeholder="0"
                         />
                       </div>
 
-                      <div className="flex flex-col gap-space-1">
+                      <div className="gap-space-1 flex flex-col">
                         <label
                           htmlFor="quantity"
-                          className="text-xs text-on-surface-variant"
+                          className="text-on-surface-variant text-xs"
                         >
                           UNIT (e.g kg, pieces, packs)
                         </label>
@@ -241,15 +256,15 @@ function ProductReg() {
                           name="unit"
                           value={formData.unit}
                           onChange={handleChange}
-                          className="peer w-full bg-surface-container-low rounded-xs py-space-2 px-space-4   border border-transparent focus:outline-none  focus:border-primary focus:bg-surface-container-lowest transition-all duration-200 "
+                          className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                           placeholder="0"
                         />
                       </div>
 
-                      <div className="flex flex-col gap-space-1">
+                      <div className="gap-space-1 flex flex-col">
                         <label
                           htmlFor="quantity"
-                          className="text-xs text-on-surface-variant"
+                          className="text-on-surface-variant text-xs"
                         >
                           REORDER POINT
                         </label>
@@ -258,19 +273,19 @@ function ProductReg() {
                           name="reorder_point"
                           value={formData.reorder_point}
                           onChange={handleChange}
-                          className="peer w-full bg-surface-container-low rounded-xs py-space-2 px-space-4   border border-transparent focus:outline-none  focus:border-primary focus:bg-surface-container-lowest transition-all duration-200 "
+                          className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                           placeholder="5"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="mt-[9rem] flex gap-space-6  flex-col ">
-                  <div className="bg-surface-container-lowest p-space-8 rounded-lg  shadow-float">
-                    <h1 className="text-md font-display font-bold text-on-surface">
+                <div className="gap-space-6 mt-[9rem] flex flex-col">
+                  <div className="bg-surface-container-lowest p-space-8 shadow-float rounded-lg">
+                    <h1 className="text-md font-display text-on-surface font-bold">
                       Product Image
                     </h1>
-                    <div className="size-50 flex justify-center items-center flex-col text-center font-body text-xs text-gray-500 bg-surface-container-low my-space-4 p-space-4  rounded-lg border-dashed border-2 border-gray-300">
+                    <div className="font-body bg-surface-container-low my-space-4 p-space-4 flex size-50 flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-center text-xs text-gray-500">
                       <CameraPlusIcon
                         size={32}
                         weight="fill"
@@ -280,11 +295,11 @@ function ProductReg() {
                       <p className="text-[0.6rem]">PNG, JPG up to 10MB</p>
                     </div>
                   </div>
-                  <div className="flex gap-space-3 flex-col">
-                    <button className=" flex w-full justify-center items-center bg-primary rounded-md p-space-3 text-surface-container-lowest text-body">
+                  <div className="gap-space-3 flex flex-col">
+                    <button className="bg-primary p-space-3 text-surface-container-lowest text-body flex w-full items-center justify-center rounded-md">
                       Commit to Ledger
                     </button>
-                    <button className=" flex w-full justify-center items-center text-on-surface-variant rounded-md p-space-3 bg-surface-container-low border-2 border-surface-container-high  text-body">
+                    <button className="text-on-surface-variant p-space-3 bg-surface-container-low border-surface-container-high text-body flex w-full items-center justify-center rounded-md border-2">
                       Discard Changes
                     </button>
                   </div>
