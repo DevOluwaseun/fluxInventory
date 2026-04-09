@@ -16,12 +16,13 @@ function ProductReg() {
     description: "",
   });
 
-  const [catalog, setCatalog] = useState([]);
+  //   const [catalog, setCatalog] = useState([]);
   const [editId, setEditId] = useState(null);
-  const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
+  const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.state);
+
   const product = location.state?.product;
 
   const handleChange = (e) => {
@@ -34,38 +35,53 @@ function ProductReg() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (editId === null) {
-      const { data } = await axios.post("http://localhost:3000/api", formData);
-      setCatalog(data);
-      setFormData({
-        name: "",
-        quantity: "",
-        sku: "",
-        category: "",
-        unit_price: "",
-        unit: "",
-        reorder_point: "",
-        description: "",
-      });
-      navigate("/inventory");
-    } else {
-      const { data } = await axios.patch(
-        `http://localhost:3000/api/${editId}`,
-        formData,
-      );
+    const validationErrors = validate();
 
-      setCatalog(data);
-      setEditId(null);
-      setFormData({
-        name: "",
-        quantity: "",
-        sku: "",
-        category: "",
-        unit_price: "",
-        unit: "",
-        reorder_point: "",
-        description: "",
-      });
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    if (editId === null) {
+      try {
+        const { data } = await axios.post(
+          "http://localhost:3000/api",
+          formData,
+        );
+        setFormData({
+          name: "",
+          quantity: "",
+          sku: "",
+          category: "",
+          unit_price: "",
+          unit: "",
+          reorder_point: "",
+          description: "",
+        });
+        navigate("/inventory");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const { data } = await axios.patch(
+          `http://localhost:3000/api/${editId}`,
+          formData,
+        );
+        setEditId(null);
+        setFormData({
+          name: "",
+          quantity: "",
+          sku: "",
+          category: "",
+          unit_price: "",
+          unit: "",
+          reorder_point: "",
+          description: "",
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
     navigate("/inventory");
   };
@@ -83,6 +99,32 @@ function ProductReg() {
     });
     console.log(location.state);
     setEditId(product.id);
+  };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Item name is required";
+    }
+
+    if (!formData.quantity || isNaN(formData.quantity)) {
+      newErrors.quantity = "Valid quantity required";
+    }
+
+    if (!formData.sku.trim()) {
+      newErrors.sku = "SKU is required";
+    }
+
+    if (!formData.unit_price || isNaN(formData.unit_price)) {
+      newErrors.unit_price = "Unit price is required";
+    }
+
+    if (!formData.unit.trim()) {
+      newErrors.unit = "Unit  is required";
+    }
+
+    return newErrors;
   };
 
   useEffect(() => {

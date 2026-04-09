@@ -13,12 +13,13 @@ import {
 import { useNavigate } from "react-router";
 
 function InventoryList() {
+  let navigate = useNavigate();
+
   const [catalog, setCatalog] = useState([]);
+
   const lowStock = catalog.filter(
     (item) => item.quantity <= item.reorder_point,
   ).length;
-
-  let navigate = useNavigate();
 
   useEffect(() => {
     const getItems = async () => {
@@ -33,10 +34,12 @@ function InventoryList() {
     navigate("/inventory/edit", { state: { product: item } });
   };
 
-  const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:3000/api/${id}`)
-      .then((res) => setCatalog(res.data));
+  const handleDelete = async (id) => {
+    try {
+      const { data } = await axios.delete(`http://localhost:3000/api/${id}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleNewItem = () => {
@@ -49,16 +52,16 @@ function InventoryList() {
     return "Healthy";
   };
 
-  const statusStyles = {
-    Critical: "bg-error-container text-error",
-    Warning: "bg-tertiary-container text-on-tertiary-container",
-    Healthy: "bg-primary-container text-primary-dim",
-  };
-
   const getStockLevel = (quantity, reorder_point) => {
     const stockLevel = Math.min((quantity / reorder_point) * 100, 100);
 
     return stockLevel;
+  };
+
+  const statusStyles = {
+    Critical: "bg-error-container text-error",
+    Warning: "bg-tertiary-container text-on-tertiary-container",
+    Healthy: "bg-primary-container text-primary-dim",
   };
 
   const barColors = {
