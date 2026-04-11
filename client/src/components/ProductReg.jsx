@@ -22,7 +22,6 @@ function ProductReg() {
 
   const navigate = useNavigate();
   const location = useLocation();
-
   const product = location.state?.product;
 
   const handleChange = (e) => {
@@ -79,11 +78,11 @@ function ProductReg() {
           reorder_point: "",
           description: "",
         });
+        navigate("/inventory");
       } catch (error) {
         console.log(error);
       }
     }
-    navigate("/inventory");
   };
 
   const edit = () => {
@@ -97,7 +96,6 @@ function ProductReg() {
       reorder_point: product.reorder_point,
       description: product.description,
     });
-    console.log(location.state);
     setEditId(product.id);
   };
 
@@ -132,7 +130,7 @@ function ProductReg() {
       edit();
       console.log(location.state);
     }
-  }, []);
+  }, [product]);
 
   return (
     <div className="flex">

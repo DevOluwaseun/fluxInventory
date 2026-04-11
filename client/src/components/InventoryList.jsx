@@ -16,18 +16,11 @@ function InventoryList() {
   let navigate = useNavigate();
 
   const [catalog, setCatalog] = useState([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
 
   const lowStock = catalog.filter(
     (item) => item.quantity <= item.reorder_point,
   ).length;
-
-  useEffect(() => {
-    const getItems = async () => {
-      const { data } = await axios.get("http://localhost:3000/api");
-      setCatalog(data);
-    };
-    getItems();
-  }, []);
 
   const findItem = (id) => {
     const item = catalog.find((item) => item.id === id);
@@ -37,6 +30,7 @@ function InventoryList() {
   const handleDelete = async (id) => {
     try {
       const { data } = await axios.delete(`http://localhost:3000/api/${id}`);
+      setRefreshTrigger((prev) => !prev);
     } catch (error) {
       console.log(error);
     }
@@ -69,6 +63,14 @@ function InventoryList() {
     Warning: "oklch(43.2% 0.232 292.759)",
     Healthy: "hsl(224, 82%, 45%)",
   };
+
+  useEffect(() => {
+    const getItems = async () => {
+      const { data } = await axios.get("http://localhost:3000/api");
+      setCatalog(data);
+    };
+    getItems();
+  }, [refreshTrigger]);
 
   return (
     <div className="flex">
