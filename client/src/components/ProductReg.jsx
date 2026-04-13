@@ -2,10 +2,14 @@ import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar.jsx";
 import axios from "axios";
 import { InfoIcon, CameraPlusIcon } from "@phosphor-icons/react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import toast from "react-hot-toast";
+import { validate } from "../utils/inventoryHelpers.js";
+
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 function ProductReg() {
-  const [formData, setFormData] = useState({
+  const emptyForm = {
     name: "",
     quantity: "",
     sku: "",
@@ -14,15 +18,16 @@ function ProductReg() {
     unit: "",
     reorder_point: "",
     description: "",
-  });
+  };
 
-  //   const [catalog, setCatalog] = useState([]);
-  const [editId, setEditId] = useState(null);
+  const [formData, setFormData] = useState(emptyForm);
+  // const [loading, setLoading] = useState(true);
+
   const [errors, setErrors] = useState({});
+  const [editId, setEditId] = useState(null);
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const product = location.state?.product;
+  const { id } = useParams();
 
   const handleChange = (e) => {
     setFormData({
@@ -33,8 +38,7 @@ function ProductReg() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const validationErrors = validate();
+    const validationErrors = validate(formData);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -43,94 +47,51 @@ function ProductReg() {
 
     if (editId === null) {
       try {
-        const { data } = await axios.post(
-          "http://localhost:3000/api",
-          formData,
-        );
-        setFormData({
-          name: "",
-          quantity: "",
-          sku: "",
-          category: "",
-          unit_price: "",
-          unit: "",
-          reorder_point: "",
-          description: "",
-        });
-        navigate("/inventory");
+        await axios.post(BASE_URL, formData);
+        toast.success("Item added successfully");
+        setFormData(emptyForm);
+        // navigate("/inventory");
       } catch (error) {
-        console.log(error);
+        toast.error("Error adding item");
       }
     } else {
       try {
-        const { data } = await axios.patch(
-          `http://localhost:3000/api/${editId}`,
-          formData,
-        );
+        await axios.patch(`${BASE_URL}/${editId}`, formData);
+        toast.success("Item updated successfully");
         setEditId(null);
-        setFormData({
-          name: "",
-          quantity: "",
-          sku: "",
-          category: "",
-          unit_price: "",
-          unit: "",
-          reorder_point: "",
-          description: "",
-        });
+        setFormData(emptyForm);
         navigate("/inventory");
       } catch (error) {
-        console.log(error);
+        toast.error("Error updating item");
       }
     }
   };
 
-  const edit = () => {
-    setFormData({
-      name: product.name,
-      quantity: product.quantity,
-      sku: product.sku,
-      category: product.category,
-      unit_price: product.unit_price,
-      unit: product.unit,
-      reorder_point: product.reorder_point,
-      description: product.description,
-    });
-    setEditId(product.id);
-  };
-
-  const validate = () => {
-    const newErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Item name is required";
-    }
-
-    if (!formData.quantity || isNaN(formData.quantity)) {
-      newErrors.quantity = "Valid quantity required";
-    }
-
-    if (!formData.sku.trim()) {
-      newErrors.sku = "SKU is required";
-    }
-
-    if (!formData.unit_price || isNaN(formData.unit_price)) {
-      newErrors.unit_price = "Unit price is required";
-    }
-
-    if (!formData.unit.trim()) {
-      newErrors.unit = "Unit  is required";
-    }
-
-    return newErrors;
+  const handleDiscard = () => {
+    navigate("/inventory");
   };
 
   useEffect(() => {
-    if (product) {
-      edit();
-      console.log(location.state);
-    }
-  }, [product]);
+    setEditId(id);
+  }, [id]);
+
+  useEffect(() => {
+    if (!editId) return;
+    const editData = async () => {
+      const { data } = await axios.get(`${BASE_URL}/${editId}`);
+      setFormData({
+        name: data.name ?? "",
+        quantity: data.quantity ?? "",
+        sku: data.sku ?? "",
+        category: data.category ?? "",
+        unit_price: data.unit_price ?? "",
+        unit: data.unit ?? "",
+        reorder_point: data.reorder_point ?? "",
+        description: data.description ?? "",
+      });
+    };
+    editData();
+  }, [editId]);
 
   return (
     <div className="flex">
@@ -182,6 +143,11 @@ function ProductReg() {
                           className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                           placeholder="e.g Ergonomic Executive Chair"
                         />
+                        {errors.name && (
+                          <p className="text-error mt-1 text-xs">
+                            {errors.name}
+                          </p>
+                        )}
                       </div>
 
                       <div className="gap-space-6 flex w-full flex-col md:flex-row">
@@ -201,6 +167,11 @@ function ProductReg() {
                             className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                             placeholder="sku"
                           />
+                          {errors.sku && (
+                            <p className="text-error mt-1 text-xs">
+                              {errors.sku}
+                            </p>
+                          )}
                         </div>
                         <div className="gap-space-1 flex w-full flex-1 flex-col">
                           <label
@@ -264,6 +235,11 @@ function ProductReg() {
                           className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                           placeholder="£ 0.00"
                         />
+                        {errors.unit_price && (
+                          <p className="text-error mt-1 text-xs">
+                            {errors.unit_price}
+                          </p>
+                        )}
                       </div>
 
                       <div className="gap-space-1 flex flex-col">
@@ -282,6 +258,11 @@ function ProductReg() {
                           className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                           placeholder="0"
                         />
+                        {errors.quantity && (
+                          <p className="text-error mt-1 text-xs">
+                            {errors.quantity}
+                          </p>
+                        )}
                       </div>
 
                       <div className="gap-space-1 flex flex-col">
@@ -299,6 +280,11 @@ function ProductReg() {
                           className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                           placeholder="0"
                         />
+                        {errors.unit && (
+                          <p className="text-error mt-1 text-xs">
+                            {errors.unit}
+                          </p>
+                        )}
                       </div>
 
                       <div className="gap-space-1 flex flex-col">
@@ -336,10 +322,17 @@ function ProductReg() {
                     </div>
                   </div>
                   <div className="gap-space-3 flex flex-col">
-                    <button className="bg-primary p-space-3 text-surface-container-lowest text-body flex w-full items-center justify-center rounded-md">
+                    <button
+                      type="submit"
+                      className="bg-primary p-space-3 text-surface-container-lowest text-body flex w-full items-center justify-center rounded-md"
+                    >
                       Commit to Ledger
                     </button>
-                    <button className="text-on-surface-variant p-space-3 bg-surface-container-low border-surface-container-high text-body flex w-full items-center justify-center rounded-md border-2">
+                    <button
+                      type="button"
+                      onClick={handleDiscard}
+                      className="text-on-surface-variant p-space-3 bg-surface-container-low border-surface-container-high text-body flex w-full items-center justify-center rounded-md border-2"
+                    >
                       Discard Changes
                     </button>
                   </div>

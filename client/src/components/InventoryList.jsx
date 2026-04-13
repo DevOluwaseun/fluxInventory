@@ -11,6 +11,10 @@ import {
   ListPlusIcon,
 } from "@phosphor-icons/react";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
+import { getStatus, getStockLevel } from "../utils/inventoryHelpers.js";
+
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 function InventoryList() {
   let navigate = useNavigate();
@@ -22,34 +26,23 @@ function InventoryList() {
     (item) => item.quantity <= item.reorder_point,
   ).length;
 
-  const findItem = (id) => {
-    const item = catalog.find((item) => item.id === id);
-    navigate("/inventory/edit", { state: { product: item } });
+  const editItem = (id) => {
+    navigate(`/inventory/edit/${id}`);
   };
 
   const handleDelete = async (id) => {
+    if (!window.confirm("Delete this item?")) return;
     try {
-      const { data } = await axios.delete(`http://localhost:3000/api/${id}`);
+      await axios.delete(`${BASE_URL}/${id}`);
+      toast.success("Item deleted");
       setRefreshTrigger((prev) => !prev);
     } catch (error) {
-      console.log(error);
+      toast.error("Failed to delete item");
     }
   };
 
   const handleNewItem = () => {
     navigate("/new");
-  };
-
-  const getStatus = (quantity, reorder_point) => {
-    if (quantity <= 2) return "Critical";
-    if (quantity <= reorder_point) return "Warning";
-    return "Healthy";
-  };
-
-  const getStockLevel = (quantity, reorder_point) => {
-    const stockLevel = Math.min((quantity / reorder_point) * 100, 100);
-
-    return stockLevel;
   };
 
   const statusStyles = {
@@ -66,8 +59,12 @@ function InventoryList() {
 
   useEffect(() => {
     const getItems = async () => {
-      const { data } = await axios.get("http://localhost:3000/api");
-      setCatalog(data);
+      try {
+        const { data } = await axios.get(BASE_URL);
+        setCatalog(data);
+      } catch (error) {
+        toast.error("Failed fetching list");
+      }
     };
     getItems();
   }, [refreshTrigger]);
@@ -144,10 +141,10 @@ function InventoryList() {
               </tr>
             </thead>
             <tbody>
-              {catalog.map((items) => (
+              {catalog.map((item) => (
                 <tr
                   className="bg-surface-container-lowest transition-colors duration-200 hover:bg-blue-50"
-                  key={items.id}
+                  key={item.id}
                 >
                   <td className="rounded-l-lg px-4 py-6">
                     <div className="flex items-center gap-3">
@@ -159,30 +156,30 @@ function InventoryList() {
 
                       <div>
                         <p className="text-md text-on-surface font-display font-semibold">
-                          {items.name}
+                          {item.name}
                         </p>
                         <p className="text-on-surface-variant text-xs font-light">
-                          {items.description}
+                          {item.description}
                         </p>
                       </div>
                     </div>
                   </td>
                   <td className="text-on-surface px-4 py-6 text-sm">
-                    {items.sku}
+                    {item.sku}
                   </td>
                   <td className="px-4 py-6">
                     <span className="rounded-full bg-slate-300 px-3 py-1 text-xs font-medium text-slate-600">
-                      {items.category}
+                      {item.category}
                     </span>
                   </td>
                   <td className="px-4 py-6">
                     <div className="bg-surface-container-low h-2 w-full rounded-full">
                       <div
                         style={{
-                          width: `${getStockLevel(items.quantity, items.reorder_point)}%`,
+                          width: `${getStockLevel(item.quantity, item.reorder_point)}%`,
                           backgroundColor:
                             barColors[
-                              getStatus(items.quantity, items.reorder_point)
+                              getStatus(item.quantity, item.reorder_point)
                             ],
                         }}
                         className="h-2 rounded-full transition-all duration-300"
@@ -192,31 +189,31 @@ function InventoryList() {
                         style={{
                           color:
                             barColors[
-                              getStatus(items.quantity, items.reorder_point)
+                              getStatus(item.quantity, item.reorder_point)
                             ],
                         }}
                       >
-                        {items.quantity} units remaining
+                        {item.quantity} units remaining
                       </p>
                     </div>
                   </td>
                   <td className="px-4 py-6">
                     <span
-                      className={`rounded-full px-3 py-1 text-[0.7rem] font-medium ${statusStyles[getStatus(items.quantity, items.reorder_point)]}`}
+                      className={`rounded-full px-3 py-1 text-[0.7rem] font-medium ${statusStyles[getStatus(item.quantity, item.reorder_point)]}`}
                     >
-                      {getStatus(items.quantity, items.reorder_point)}
+                      {getStatus(item.quantity, item.reorder_point)}
                     </span>
                   </td>
                   <td className="text-on-surface rounded-r-lg px-4 py-6">
                     <button
                       className="mr-space-4"
-                      onClick={() => findItem(items.id)}
+                      onClick={() => editItem(item.id)}
                     >
                       <PenIcon size={20} weight="fill" />{" "}
                     </button>
                     <button
                       className="mx-space-4"
-                      onClick={() => handleDelete(items.id)}
+                      onClick={() => handleDelete(item.id)}
                     >
                       <TrashIcon size={20} weight="fill" />
                     </button>

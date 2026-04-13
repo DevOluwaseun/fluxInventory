@@ -10,7 +10,7 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/new" element={<ProductReg />} />
         <Route path="/inventory" element={<InventoryList />} />
-        <Route path="/inventory/edit" element={<ProductReg />} />
+        <Route path="/inventory/edit/:id" element={<ProductReg />} />
         {/* <Route path="*" element={<NoMatch />} />  */}
       </Routes>
     </BrowserRouter>
