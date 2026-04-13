@@ -2,14 +2,19 @@ import express from "express";
 import itemRoute from "./routes/item.route.js";
 import morgan from "morgan";
 import cors from "cors";
+import { configDotenv } from "dotenv";
+
+import createTable from "./migrations/createTable.js";
+
+createTable();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(morgan("dev"));
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Hello, World");
