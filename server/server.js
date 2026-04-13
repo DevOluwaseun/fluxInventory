@@ -4,7 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import { configDotenv } from "dotenv";
 
-import createTable from "./migrations/createTable.js";
+import createTable from "./migrations/createItemsTable.js";
 
 createTable();
 
