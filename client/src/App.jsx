@@ -11,7 +11,7 @@ function App() {
         <Route path="/new" element={<ProductReg />} />
         <Route path="/inventory" element={<InventoryList />} />
         <Route path="/inventory/edit/:id" element={<ProductReg />} />
-        {/* <Route path="*" element={<NoMatch />} />  */}
+        <Route path="*" element={<NoMatch />} />
       </Routes>
     </BrowserRouter>
   );
