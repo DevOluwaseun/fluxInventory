@@ -3,11 +3,6 @@ import pool from "../db.js";
 import asyncHandler from "../utils/asyncHandler.js";
 const router = express.Router();
 
-router.use((req, res, next) => {
-  console.log("Router hit:", req.method, req.url);
-  next();
-});
-
 router.get(
   "/",
   asyncHandler(async (req, res) => {

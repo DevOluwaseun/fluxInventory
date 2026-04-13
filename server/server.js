@@ -2,7 +2,6 @@ import express from "express";
 import itemRoute from "./routes/item.route.js";
 import morgan from "morgan";
 import cors from "cors";
-import { configDotenv } from "dotenv";
 
 import createTable from "./migrations/createItemsTable.js";
 
