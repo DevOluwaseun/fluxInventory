@@ -21,6 +21,12 @@ export const validate = (formData) => {
     newErrors.unit = "Unit  is required";
   }
 
+   if (!formData.reorder_point || isNaN(formData.reorder_point)) {
+    newErrors.reorder_point = "Reorder point is required";
+  }
+
+  
+
   return newErrors;
 };
 
