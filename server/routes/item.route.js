@@ -14,6 +14,13 @@ router.get(
 router.post(
   "/",
   asyncHandler(async (req, res) => {
+    const count = await pool.query("SELECT COUNT(*) FROM items");
+    if (parseInt(count.rows[0].count) >= 50) {
+      return res
+        .status(403)
+        .json({ message: "Demo limit reached. Authentication coming soon." });
+    }
+
     const {
       name,
       quantity,
