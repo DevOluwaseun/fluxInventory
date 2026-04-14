@@ -70,6 +70,7 @@ describe("validate", () => {
       sku: "SK01",
       unit_price: "10",
       unit: "kg",
+      reorder_point: "5",
     });
     expect(Object.keys(result).length).toBe(0);
   });
