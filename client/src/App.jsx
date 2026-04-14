@@ -1,3 +1,5 @@
+import Sidebar from "./components/Sidebar.jsx";
+import ComingSoon from "./components/ComingSoon.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import InventoryList from "./components/InventoryList.jsx";
 import ProductReg from "./components/ProductReg.jsx";
@@ -7,11 +9,16 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/new" element={<ProductReg />} />
-        <Route path="/inventory" element={<InventoryList />} />
-        <Route path="/inventory/edit/:id" element={<ProductReg />} />
-        <Route path="*" element={<NoMatch />} />
+        <Route element={<Sidebar />}>
+          <Route path="/" element={<ComingSoon page="Dashboard" />} />
+          <Route path="/scan" element={<ComingSoon page="Scan" />} />
+          <Route path="/reports" element={<ComingSoon page="Reports" />} />
+          <Route path="/settings" element={<ComingSoon page="Settings" />} />
+          <Route path="/new" element={<ProductReg />} />
+          <Route path="/inventory" element={<InventoryList />} />
+          <Route path="/inventory/edit/:id" element={<ProductReg />} />
+          {/* <Route path="*" element={<NoMatch />} /> */}
+        </Route>
       </Routes>
     </BrowserRouter>
   );

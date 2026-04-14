@@ -21,7 +21,6 @@ function ProductReg() {
   };
 
   const [formData, setFormData] = useState(emptyForm);
-  // const [loading, setLoading] = useState(true);
 
   const [errors, setErrors] = useState({});
   const [editId, setEditId] = useState(null);
@@ -45,12 +44,12 @@ function ProductReg() {
       return;
     }
 
-    if (editId === null) {
+    if (!editId) {
       try {
         await axios.post(BASE_URL, formData);
         toast.success("Item added successfully");
         setFormData(emptyForm);
-        // navigate("/inventory");
+        navigate("/inventory");
       } catch (error) {
         toast.error("Error adding item");
       }
@@ -72,7 +71,7 @@ function ProductReg() {
   };
 
   useEffect(() => {
-    setEditId(id);
+    if (id) setEditId(id);
   }, [id]);
 
   useEffect(() => {
@@ -95,8 +94,6 @@ function ProductReg() {
 
   return (
     <div className="flex">
-      <Sidebar />
-
       <div className="p-space-6 gap-space-1 flex flex-col">
         <h1 className="text-md font-body text-on-surface">
           Inventory Management
@@ -302,6 +299,11 @@ function ProductReg() {
                           className="peer bg-surface-container-low py-space-2 px-space-4 focus:border-primary w-full rounded-xs border border-transparent transition-all duration-200 focus:bg-blue-50 focus:outline-none"
                           placeholder="5"
                         />
+                        {errors.reorder_point && (
+                          <p className="text-error mt-1 text-xs">
+                            {errors.reorder_point}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
