@@ -4,13 +4,12 @@ import {
   ChartLineUpIcon,
   GearIcon,
 } from "@phosphor-icons/react";
-import { Outlet } from "react-router";
-import { NavLink } from "react-router";
+import { NavLink, Outlet } from "react-router";
 
 function Sidebar() {
   return (
-    <div className="flex">
-      <div className="p-space-6 bg-surface-container-low h-screen w-64">
+    <div className="relative md:flex">
+      <div className="p-space-6 bg-surface-container-low hidden h-screen w-64 md:block">
         <div>
           <h3 className="text-primary font-display text-xl font-bold">
             flux Inventory
@@ -84,11 +83,83 @@ function Sidebar() {
               <li className="hover:text-primary-dim gap-space-3 flex cursor-pointer items-center">
                 <GearIcon size={25} weight="fill" />
                 <span>Settings</span>
-              </li>{" "}
+              </li>
             </NavLink>
           </ul>
         </div>
       </div>
+
+      {/* Mobile */}
+
+      <div className="font-body shadow-float text-on-surface p-space-2 pb-space-4 px-space-6 bg-surface-container-lowest absolute bottom-0 w-full rounded-t-xl text-xs md:hidden">
+        <ul className="flex justify-between">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `gap-space-3 flex items-center ${isActive ? "text-primary border-primary rounded-lg bg-blue-50 " : "text-outline hover:text-primary-dim"}`
+            }
+          >
+            <li className="hover:text-primary-dim p-space-2 flex cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M9 3a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-6a2 2 0 0 1 2 -2zm0 12a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-2a2 2 0 0 1 2 -2zm10 -4a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-6a2 2 0 0 1 2 -2zm0 -8a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2v-2a2 2 0 0 1 2 -2z" />
+              </svg>
+
+              <span>Dashboard</span>
+            </li>
+          </NavLink>
+          <NavLink
+            to="/inventory"
+            className={({ isActive }) =>
+              `gap-space-3 flex items-center ${isActive ? "text-primary border-primary rounded-lg bg-blue-50 " : "text-outline hover:text-primary-dim"}`
+            }
+          >
+            <li className="hover:text-primary-dim p-space-2 flex cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
+              <ArchiveIcon size={20} weight="fill" />
+              <span>Inventory</span>
+            </li>
+          </NavLink>
+          <NavLink
+            to="/scan"
+            className={({ isActive }) =>
+              `gap-space-3 flex items-center ${isActive ? "text-primary border-primary rounded-lg bg-blue-50 " : "text-outline hover:text-primary-dim"}`
+            }
+          >
+            <li className="hover:text-primary-dim p-space-2 px-space-6 flex cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
+              <QrCodeIcon size={20} weight="fill" />
+              <span> Scan</span>
+            </li>{" "}
+          </NavLink>
+          <NavLink
+            to="/reports"
+            className={({ isActive }) =>
+              `gap-space-3 flex items-center ${isActive ? "text-primary border-primary rounded-lg bg-blue-50" : "text-outline hover:text-primary-dim"}`
+            }
+          >
+            <li className="hover:text-primary-dim p-space-2 px-space-4 flex cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
+              <ChartLineUpIcon size={20} weight="fill" />
+              <span>Reports</span>
+            </li>{" "}
+          </NavLink>
+          <NavLink
+            to="/settings"
+            className={({ isActive }) =>
+              `gap-space-3 flex items-center ${isActive ? "text-primary border-primary rounded-lg bg-blue-50" : "text-outline hover:text-primary-dim"}`
+            }
+          >
+            <li className="hover:text-primary-dim p-space-2 px-space-4 flex cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
+              <GearIcon size={20} weight="fill" />
+              <span>Settings</span>
+            </li>
+          </NavLink>
+        </ul>
+      </div>
+
       <div className="w-full">
         <Outlet />
       </div>
