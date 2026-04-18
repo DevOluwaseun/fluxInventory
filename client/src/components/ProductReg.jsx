@@ -105,7 +105,7 @@ function ProductReg() {
               className="gap-space-6 flex flex-wrap"
               onSubmit={handleSubmit}
             >
-              <div className="gap-space-6 flex">
+              <div className="gap-space-6 md:flex">
                 <div>
                   <div>
                     <h1 className="font-display text-on-surface mt-space-12 mb-space-2 text-4xl font-bold">
@@ -308,7 +308,7 @@ function ProductReg() {
                     </div>
                   </div>
                 </div>
-                <div className="gap-space-6 mt-[9rem] flex flex-col">
+                <div className="gap-space-6 mt-space-6 mb-[5rem] flex flex-col md:mt-[9rem]">
                   <div className="bg-surface-container-lowest p-space-8 shadow-float rounded-lg">
                     <h1 className="text-md font-display text-on-surface font-bold">
                       Product Image

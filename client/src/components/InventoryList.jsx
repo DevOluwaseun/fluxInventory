@@ -86,15 +86,20 @@ function InventoryList() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <div className="w-full">
-        <div className="mt-space-12 flex flex-row justify-between">
-          <div className="gap-space-4 p-space-6 flex flex-col">
-            <h1 className="font-body text-primary text-xs">INVENTORY LIST</h1>
-            <h1 className="font-display text-on-surface mb-space-2 text-4xl font-bold">
-              Catalog
+        <div className="mt-space-6 flex flex-row justify-between">
+          <div className="px-space-6 flex flex-col justify-end">
+            <h1 className="font-body text-primary mb-space-12 text-md font-bold md:hidden">
+              Flux Inventory
             </h1>
+            <h1 className="font-display text-on-surface mb-space-2 text-4xl font-bold">
+              Inventory
+            </h1>
+            <p className="text-body text-on-surface-variant">
+              Manage your precision stock level across all categories.
+            </p>
           </div>
           <div>
-            <div className="gap-space-4 mb-space-8 flex justify-center">
+            <div className="gap-space-4 mb-space-8 hidden justify-center md:flex">
               <div className="py-space-3 px-space-4 bg-surface-container-low gap-space-3 flex items-center rounded-md">
                 <div className="bg-primary-container text-primary-dim p-space-2 rounded-full">
                   <ListPlusIcon size={25} weight="fill" />
@@ -114,7 +119,7 @@ function InventoryList() {
                 </div>
               </div>
             </div>
-            <div className="gap-space-3 px-space-6 flex">
+            <div className="gap-space-3 px-space-6 hidden md:flex">
               <button className="gap-space-3 text-on-surface p-space-3 bg-surface-container-lowest border-surface-container-high text-body hover:bg-primary-container flex items-center justify-center self-start rounded-md border-2 transition-colors duration-200">
                 <DownloadIcon size={20} weight="fill" />{" "}
                 <span> Export CSV</span>
@@ -128,6 +133,9 @@ function InventoryList() {
               </button>
             </div>
           </div>
+          <button className="m-space-3 text-on-surface p-space-3 bg-surface-container-lowest border-surface-container-high text-body hover:bg-primary-container flex items-end justify-center self-end rounded-md border-2 transition-colors duration-200 md:hidden">
+            <DownloadIcon size={20} weight="fill" />
+          </button>
         </div>
         <div className="p-space-6">
           {loading ? (
@@ -139,132 +147,182 @@ function InventoryList() {
               </tbody>
             </table>
           ) : (
-            <table className="w-full border-separate border-spacing-y-4">
-              <thead>
-                <tr className="text-left">
-                  <th className="font-body text-on-surface-variant px-4 text-left text-xs font-normal">
-                    ITEM DETAILS
-                  </th>
-                  <th className="font-body text-on-surface-variant px-4 text-left text-xs font-normal">
-                    SKU
-                  </th>
-                  <th className="font-body text-on-surface-variant px-4 text-left text-xs font-normal">
-                    CATEGORY
-                  </th>
-                  <th className="font-body text-on-surface-variant px-4 text-left text-xs font-normal">
-                    STOCK LEVEL
-                  </th>
-                  <th className="font-body text-on-surface-variant px-4 py-3 text-left text-xs font-normal">
-                    STATUS
-                  </th>
-                  <th className="font-body text-on-surface-variant px-4 text-left text-xs font-normal">
-                    ACTIONS
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {activeSlice.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan="6"
-                      className="text-on-surface-variant px-4 py-12 text-center text-sm"
-                    >
-                      No items found. Add your first item.
-                    </td>
+            <div>
+              <table className="hidden w-full border-separate border-spacing-y-4 md:block">
+                <thead>
+                  <tr className="text-left">
+                    <th className="font-body text-on-surface-variant px-4 text-left text-xs font-normal">
+                      ITEM DETAILS
+                    </th>
+                    <th className="font-body text-on-surface-variant px-4 text-left text-xs font-normal">
+                      SKU
+                    </th>
+                    <th className="font-body text-on-surface-variant px-4 text-left text-xs font-normal">
+                      CATEGORY
+                    </th>
+                    <th className="font-body text-on-surface-variant px-4 text-left text-xs font-normal">
+                      STOCK LEVEL
+                    </th>
+                    <th className="font-body text-on-surface-variant px-4 py-3 text-left text-xs font-normal">
+                      STATUS
+                    </th>
+                    <th className="font-body text-on-surface-variant px-4 text-left text-xs font-normal">
+                      ACTIONS
+                    </th>
                   </tr>
-                ) : (
-                  activeSlice.map((item) => (
-                    <tr
-                      className="bg-surface-container-lowest transition-colors duration-200 hover:bg-blue-50"
-                      key={item.id}
-                    >
-                      <td className="rounded-l-lg px-4 py-6">
-                        <div className="flex items-center gap-3">
-                          <img
-                            className="bg-surface-container-low h-10 w-10 rounded-md object-cover"
-                            src={placeholder}
-                            alt="product"
-                          />
-
-                          <div>
-                            <p className="text-md text-on-surface font-display font-semibold">
-                              {item.name}
-                            </p>
-                            <p className="text-on-surface-variant text-xs font-light">
-                              {item.description}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="text-on-surface px-4 py-6 text-sm">
-                        {item.sku}
-                      </td>
-                      <td className="px-4 py-6">
-                        <span className="rounded-full bg-slate-300 px-3 py-1 text-xs font-medium text-slate-600">
-                          {item.category}
-                        </span>
-                      </td>
-                      <td className="px-4 py-6">
-                        <div className="bg-surface-container-low h-2 w-full rounded-full">
-                          <div
-                            style={{
-                              width: `${getStockLevel(item.quantity, item.reorder_point)}%`,
-                              backgroundColor:
-                                barColors[
-                                  getStatus(item.quantity, item.reorder_point)
-                                ],
-                            }}
-                            className="h-2 rounded-full transition-all duration-300"
-                          />
-                          <p
-                            className="py-space-1 text-[0.6rem]"
-                            style={{
-                              color:
-                                barColors[
-                                  getStatus(item.quantity, item.reorder_point)
-                                ],
-                            }}
-                          >
-                            {item.quantity} units remaining
-                          </p>
-                        </div>
-                      </td>
-                      <td className="px-4 py-6">
-                        <span
-                          className={`rounded-full px-3 py-1 text-[0.7rem] font-medium ${statusStyles[getStatus(item.quantity, item.reorder_point)]}`}
-                        >
-                          {getStatus(item.quantity, item.reorder_point)}
-                        </span>
-                      </td>
-                      <td className="text-on-surface rounded-r-lg px-4 py-6">
-                        <button
-                          className="mr-space-4"
-                          onClick={() => editItem(item.id)}
-                        >
-                          <PenIcon size={20} weight="fill" />{" "}
-                        </button>
-                        <button
-                          className="mx-space-4"
-                          onClick={() => handleDelete(item.id)}
-                        >
-                          <TrashIcon size={20} weight="fill" />
-                        </button>
+                </thead>
+                <tbody>
+                  {activeSlice.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan="6"
+                        className="text-on-surface-variant px-4 py-12 text-center text-sm"
+                      >
+                        No items found. Add your first item.
                       </td>
                     </tr>
+                  ) : (
+                    activeSlice.map((item) => (
+                      <tr
+                        className="bg-surface-container-lowest transition-colors duration-200 hover:bg-blue-50"
+                        key={item.id}
+                      >
+                        <td className="rounded-l-lg px-4 py-6">
+                          <div className="flex items-center gap-3">
+                            <img
+                              className="bg-surface-container-low h-12 w-12 rounded-md object-cover"
+                              src={placeholder}
+                              alt="product"
+                            />
+
+                            <td className="px-4 py-6">
+                              <p className="text-md text-on-surface font-display font-semibold">
+                                {item.name}
+                              </p>
+                              <p className="text-on-surface-variant text-xs font-light">
+                                {item.description}
+                              </p>
+                            </td>
+                          </div>
+                        </td>
+                        <td className="text-on-surface px-4 py-6 text-sm">
+                          {item.sku}
+                        </td>
+                        <td className="px-4 py-6">
+                          <span className="rounded-full bg-slate-300 px-3 py-1 text-xs font-medium text-slate-600">
+                            {item.category}
+                          </span>
+                        </td>
+                        <td className="px-4 py-6">
+                          <div className="bg-surface-container-low h-2 w-full rounded-full">
+                            <div
+                              style={{
+                                width: `${getStockLevel(item.quantity, item.reorder_point)}%`,
+                                backgroundColor:
+                                  barColors[
+                                    getStatus(item.quantity, item.reorder_point)
+                                  ],
+                              }}
+                              className="h-2 rounded-full transition-all duration-300"
+                            />
+                            <p
+                              className="py-space-1 text-[0.6rem]"
+                              style={{
+                                color:
+                                  barColors[
+                                    getStatus(item.quantity, item.reorder_point)
+                                  ],
+                              }}
+                            >
+                              {item.quantity} units remaining
+                            </p>
+                          </div>
+                        </td>
+                        <td className="px-4 py-6">
+                          <span
+                            className={`rounded-full px-3 py-1 text-[0.7rem] font-medium ${statusStyles[getStatus(item.quantity, item.reorder_point)]}`}
+                          >
+                            {getStatus(item.quantity, item.reorder_point)}
+                          </span>
+                        </td>
+                        <td className="text-on-surface rounded-r-lg px-4 py-6">
+                          <button
+                            className="mr-space-4"
+                            onClick={() => editItem(item.id)}
+                          >
+                            <PenIcon size={20} weight="fill" />{" "}
+                          </button>
+                          <button
+                            className="mx-space-4"
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            <TrashIcon size={20} weight="fill" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+
+              {/* mobile */}
+
+              <div className="relative">
+                {activeSlice.length === 0 ? (
+                  <div className="text-on-surface-variant px-4 py-12 text-center text-sm">
+                    No items found. Add your first item.
+                  </div>
+                ) : (
+                  activeSlice.map((item) => (
+                    <div
+                      key={item.id}
+                      className="bg-surface-container-lowest my-space-4 p-space-4 flex items-center justify-between rounded-xl transition-colors duration-200 hover:bg-blue-50"
+                    >
+                      <div className="gap-space-4 flex items-center justify-center">
+                        <img
+                          className="bg-surface-container-low h-20 w-20 rounded-md object-cover"
+                          src={placeholder}
+                          alt="product"
+                        />
+
+                        <div className="gap-space-2 flex flex-col">
+                          <div>
+                            <p className="text-md text-on-surface font-display font-bold">
+                              {item.name}
+                            </p>
+                            <p className="text-outline-variant text-sm">
+                              {item.sku}
+                            </p>{" "}
+                          </div>
+                          <p className="text-on-surface text-xs">
+                            <span className="text-xl font-bold">
+                              {item.quantity}
+                            </span>
+                            <span className="text-outline-variant"> UNITS</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        className={`inline-flex items-center rounded-full px-3 py-1 text-[0.7rem] font-medium ${statusStyles[getStatus(item.quantity, item.reorder_point)]}`}
+                      >
+                        {getStatus(item.quantity, item.reorder_point)}
+                      </div>
+                    </div>
                   ))
                 )}
-              </tbody>
-            </table>
+              </div>
+            </div>
           )}
+          <button
+            onClick={handleNewItem}
+            className="bg-primary text-surface-container-lowest p-space-4 px-space-6 shadow-primary/50 absolute right-10 bottom-25 rounded-lg shadow-lg"
+          >
+            +
+          </button>
         </div>
-        <div className="mt-auto">
+        <div className="mt-auto hidden md:block">
           {totalPages > 1 && (
             <div className="flex items-center justify-center px-4 py-4">
-              {/* <p className="text-on-surface-variant text-xs">
-              Showing {(currentPage - 1) * itemsPerPage + 1}–
-              {Math.min(currentPage * itemsPerPage, catalog.length)} of{" "}
-              {catalog.length} items
-            </p> */}
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setCurrentPage((prev) => prev - 1)}
