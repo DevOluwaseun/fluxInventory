@@ -187,7 +187,7 @@ function InventoryList() {
                         className="bg-surface-container-lowest transition-colors duration-200 hover:bg-blue-50"
                         key={item.id}
                       >
-                        <td className="rounded-l-lg px-4 py-6">
+                        <div className="rounded-l-lg px-4 py-6">
                           <div className="flex items-center gap-3">
                             <img
                               className="bg-surface-container-low h-12 w-12 rounded-md object-cover"
@@ -204,7 +204,7 @@ function InventoryList() {
                               </p>
                             </td>
                           </div>
-                        </td>
+                        </div>
                         <td className="text-on-surface px-4 py-6 text-sm">
                           {item.sku}
                         </td>
