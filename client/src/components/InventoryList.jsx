@@ -84,7 +84,7 @@ function InventoryList() {
   }, [refreshTrigger]);
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="relative flex min-h-screen w-full flex-col">
       <div className="w-full">
         <div className="mt-space-6 flex flex-row justify-between">
           <div className="px-space-6 flex flex-col justify-end">
@@ -147,10 +147,10 @@ function InventoryList() {
               </tbody>
             </table>
           ) : (
-            <div>
-              <table className="hidden w-full border-separate border-spacing-y-4 md:block">
-                <thead>
-                  <tr className="text-left">
+            <div className="w-full">
+              <table className="w-full table-fixed border-separate border-spacing-y-4 max-md:hidden">
+                <thead className="w-full">
+                  <tr className="w-full text-left">
                     <th className="font-body text-on-surface-variant px-4 text-left text-xs font-normal">
                       ITEM DETAILS
                     </th>
@@ -171,9 +171,9 @@ function InventoryList() {
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="w-full">
                   {activeSlice.length === 0 ? (
-                    <tr>
+                    <tr className="w-full">
                       <td
                         colSpan="6"
                         className="text-on-surface-variant px-4 py-12 text-center text-sm"
@@ -184,10 +184,10 @@ function InventoryList() {
                   ) : (
                     activeSlice.map((item) => (
                       <tr
-                        className="bg-surface-container-lowest transition-colors duration-200 hover:bg-blue-50"
+                        className="bg-surface-container-lowest w-full transition-colors duration-200 hover:bg-blue-50"
                         key={item.id}
                       >
-                        <div className="rounded-l-lg px-4 py-6">
+                        <td className="rounded-l-lg px-4 py-6">
                           <div className="flex items-center gap-3">
                             <img
                               className="bg-surface-container-low h-12 w-12 rounded-md object-cover"
@@ -195,16 +195,16 @@ function InventoryList() {
                               alt="product"
                             />
 
-                            <td className="px-4 py-6">
+                            <div className="flex flex-col">
                               <p className="text-md text-on-surface font-display font-semibold">
                                 {item.name}
                               </p>
                               <p className="text-on-surface-variant text-xs font-light">
                                 {item.description}
                               </p>
-                            </td>
+                            </div>
                           </div>
-                        </div>
+                        </td>
                         <td className="text-on-surface px-4 py-6 text-sm">
                           {item.sku}
                         </td>
@@ -267,7 +267,7 @@ function InventoryList() {
 
               {/* mobile */}
 
-              <div className="relative">
+              <div className="md:hidden">
                 {activeSlice.length === 0 ? (
                   <div className="text-on-surface-variant px-4 py-12 text-center text-sm">
                     No items found. Add your first item.
@@ -276,7 +276,7 @@ function InventoryList() {
                   activeSlice.map((item) => (
                     <div
                       key={item.id}
-                      className="bg-surface-container-lowest my-space-4 p-space-4 flex items-center justify-between rounded-xl transition-colors duration-200 hover:bg-blue-50"
+                      className="bg-surface-container-lowest my-space-4 p-space-4 font-body flex items-center justify-between rounded-xl transition-colors duration-200 hover:bg-blue-50"
                     >
                       <div className="gap-space-4 flex items-center justify-center">
                         <img
@@ -287,7 +287,7 @@ function InventoryList() {
 
                         <div className="gap-space-2 flex flex-col">
                           <div>
-                            <p className="text-md text-on-surface font-display font-bold">
+                            <p className="text-md text-on-surface font-display max-w-[100px] truncate font-semibold">
                               {item.name}
                             </p>
                             <p className="text-outline-variant text-sm">
@@ -302,10 +302,17 @@ function InventoryList() {
                           </p>
                         </div>
                       </div>
-                      <div
-                        className={`inline-flex items-center rounded-full px-3 py-1 text-[0.7rem] font-medium ${statusStyles[getStatus(item.quantity, item.reorder_point)]}`}
-                      >
-                        {getStatus(item.quantity, item.reorder_point)}
+                      <div className="gap-space-6 flex flex-col items-end">
+                        <div
+                          className={`top-1 inline-flex items-center rounded-full px-2 py-1 text-[0.7rem] font-medium ${statusStyles[getStatus(item.quantity, item.reorder_point)]}`}
+                        >
+                          {getStatus(item.quantity, item.reorder_point)}
+                        </div>
+                        <div>
+                          <button className="text-outline-variant pr-space-1 font-bold">
+                            {">"}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))
@@ -313,12 +320,6 @@ function InventoryList() {
               </div>
             </div>
           )}
-          <button
-            onClick={handleNewItem}
-            className="bg-primary text-surface-container-lowest p-space-4 px-space-6 shadow-primary/50 absolute right-10 bottom-25 rounded-lg shadow-lg"
-          >
-            +
-          </button>
         </div>
         <div className="mt-auto hidden md:block">
           {totalPages > 1 && (
@@ -356,6 +357,12 @@ function InventoryList() {
           )}
         </div>
       </div>
+      <button
+        onClick={handleNewItem}
+        className="bg-primary text-surface-container-lowest p-space-4 px-space-6 shadow-primary/50 absolute fixed right-10 bottom-25 rounded-lg shadow-lg"
+      >
+        +
+      </button>
     </div>
   );
 }

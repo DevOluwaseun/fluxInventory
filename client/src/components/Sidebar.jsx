@@ -91,15 +91,15 @@ function Sidebar() {
 
       {/* Mobile */}
 
-      <div className="font-body shadow-float text-on-surface p-space-2 pb-space-4 px-space-6 bg-surface-container-lowest absolute bottom-0 w-full rounded-t-xl text-xs md:hidden">
-        <ul className="flex justify-between">
+      <div className="font-body shadow-float text-on-surface p-space-2 pb-space-4 px-space-6 bg-surface-container-lowest fixed right-0 bottom-0 left-0 z-10 w-full rounded-t-xl text-xs md:hidden">
+        <ul className="gap-space-2 flex justify-between">
           <NavLink
             to="/"
             className={({ isActive }) =>
-              `gap-space-3 flex items-center ${isActive ? "text-primary border-primary rounded-lg bg-blue-50 " : "text-outline hover:text-primary-dim"}`
+              `gap-space-3 flex flex-1 items-center px-1 py-3 ${isActive ? "text-primary border-primary w-full rounded-lg bg-blue-50 " : "text-outline hover:text-primary-dim"}`
             }
           >
-            <li className="hover:text-primary-dim p-space-2 flex cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
+            <li className="hover:text-primary-dim flex w-full cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -116,10 +116,10 @@ function Sidebar() {
           <NavLink
             to="/inventory"
             className={({ isActive }) =>
-              `gap-space-3 flex items-center ${isActive ? "text-primary border-primary rounded-lg bg-blue-50 " : "text-outline hover:text-primary-dim"}`
+              `gap-space-3 flex flex-1 items-center px-1 py-3 ${isActive ? "text-primary border-primary w-full rounded-lg bg-blue-50 " : "text-outline hover:text-primary-dim"}`
             }
           >
-            <li className="hover:text-primary-dim p-space-2 flex cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
+            <li className="hover:text-primary-dim flex w-full cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
               <ArchiveIcon size={20} weight="fill" />
               <span>Inventory</span>
             </li>
@@ -127,10 +127,10 @@ function Sidebar() {
           <NavLink
             to="/scan"
             className={({ isActive }) =>
-              `gap-space-3 flex items-center ${isActive ? "text-primary border-primary rounded-lg bg-blue-50 " : "text-outline hover:text-primary-dim"}`
+              `gap-space-3 flex flex-1 items-center py-3 ${isActive ? "text-primary border-primary rounded-lg bg-blue-50 " : "text-outline hover:text-primary-dim"}`
             }
           >
-            <li className="hover:text-primary-dim p-space-2 px-space-6 flex cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
+            <li className="hover:text-primary-dim flex w-full cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
               <QrCodeIcon size={20} weight="fill" />
               <span> Scan</span>
             </li>{" "}
@@ -138,10 +138,10 @@ function Sidebar() {
           <NavLink
             to="/reports"
             className={({ isActive }) =>
-              `gap-space-3 flex items-center ${isActive ? "text-primary border-primary rounded-lg bg-blue-50" : "text-outline hover:text-primary-dim"}`
+              `gap-space-3 flex flex-1 items-center py-3 ${isActive ? "text-primary border-primary rounded-lg bg-blue-50" : "text-outline hover:text-primary-dim"}`
             }
           >
-            <li className="hover:text-primary-dim p-space-2 px-space-4 flex cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
+            <li className="hover:text-primary-dim flex w-full cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
               <ChartLineUpIcon size={20} weight="fill" />
               <span>Reports</span>
             </li>{" "}
@@ -149,10 +149,10 @@ function Sidebar() {
           <NavLink
             to="/settings"
             className={({ isActive }) =>
-              `gap-space-3 flex items-center ${isActive ? "text-primary border-primary rounded-lg bg-blue-50" : "text-outline hover:text-primary-dim"}`
+              `gap-space-3 flex flex-1 items-center ${isActive ? "text-primary border-primary rounded-lg bg-blue-50" : "text-outline hover:text-primary-dim"}`
             }
           >
-            <li className="hover:text-primary-dim p-space-2 px-space-4 flex cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
+            <li className="hover:text-primary-dim flex w-full cursor-pointer flex-col items-center rounded-lg hover:bg-blue-50">
               <GearIcon size={20} weight="fill" />
               <span>Settings</span>
             </li>
