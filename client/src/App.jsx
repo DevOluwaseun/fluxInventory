@@ -3,12 +3,14 @@ import ComingSoon from "./components/ComingSoon.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import InventoryList from "./components/InventoryList.jsx";
 import ProductReg from "./components/ProductReg.jsx";
+import Login from "./components/Login.jsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* <Route path="/login" element={<Login />} /> */}
         <Route element={<Sidebar />}>
           <Route path="/" element={<ComingSoon page="Dashboard" />} />
           <Route path="/scan" element={<ComingSoon page="Scan" />} />
